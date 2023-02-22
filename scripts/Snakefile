@@ -1,0 +1,62 @@
+reps = [i for i in range(10)]
+
+rule all:
+    input:
+        expand("output/ts-{r}.trees", r=reps),
+        expand("tmp/base-{r}.txt", r=reps),
+        expand("tmp/sq-{r}.txt", r=reps),
+        expand("tmp/la-{r}.txt", r=reps)
+
+rule simulate:
+    output:
+        # "output/times-sim.txt",
+        "output/ts-{r}.trees"
+    resources:
+        mem_mb=8000,
+        runtime=10,
+        job_name="ooa-sim",
+        output="tmp/sim-{r}.log"
+    shell:
+        "python simulate-reps.py --rep {wildcards.r}"
+
+rule linkanc:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        # "output/times-linkancestors.txt",
+        "tmp/la-{r}.txt"
+    resources:
+        mem_mb=16000,
+        runtime=10,
+        job_name="ooa-la",
+        output="tmp/la-{r}.log"
+    shell:
+        "python la-time-linkancestors.py --rep {wildcards.r}"
+
+rule baseline:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        # "output/times-baseline.txt",
+        "tmp/base-{r}.txt"
+    resources:
+        mem_mb=96000,
+        runtime=60,
+        job_name="ooa-bs",
+        output="tmp/bs-{r}.log"
+    shell:
+        "python la-time-baseline.py --rep {wildcards.r}"
+
+rule squash:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        # "output/times-squash.txt",
+        "tmp/sq-{r}.txt"
+    resources:
+        mem_mb=8000,
+        runtime=900,
+        job_name="ooa-sq",
+        output="tmp/sq-{r}.log"
+    shell:
+        "python la-time-squash.py --rep {wildcards.r}"

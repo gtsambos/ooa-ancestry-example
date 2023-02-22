@@ -33,8 +33,8 @@ ts = msprime.sim_ancestry(
     samples={"YRI": num_inds, "CEU": num_inds, "CHB" : num_inds},
     demography=msp_dem,
     random_seed=1016,
-    sequence_length=51304566, # stdpopsim default for chr22
-    recombination_rate=1.4445e-08 # stdpopsim default for chr1
+    sequence_length=248956422, # stdpopsim default for chr1
+    recombination_rate=1.15235e-08 # stdpopsim default for chr1
 )
 time_end = time.time()
 print("Total simulation time: ", time_end - time_start)
