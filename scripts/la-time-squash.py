@@ -44,5 +44,5 @@ time_end = time.time()
 with open(outfile, "a") as f:
     print(time_end - time_start, file=f)
 
-with open(f"tmp/sq-{rep}", "w") as f:
+with open(f"tmp/sq-{rep}.txt", "w") as f:
     print(time_end - time_start, file=f)

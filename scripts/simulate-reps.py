@@ -21,12 +21,13 @@ outfile = "output/times-sim.txt"
 species = stdpopsim.get_species("HomSap")
 model = species.get_demographic_model('OutOfAfricaArchaicAdmixture_5R19')
 graph = model.model.to_demes()
-census_time = 2093.5
+census_times = [50, 2093.5]
 num_inds = 100
 
 # Convert to msprime format and add a census time just before OOA
 msp_dem = msprime.Demography.from_demes(graph)
-msp_dem.add_census(time=census_time)
+msp_dem.add_census(time=census_times[0])
+msp_dem.add_census(time=census_times[1])
 msp_dem.sort_events()
 
 # Simulate with msprime.

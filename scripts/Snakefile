@@ -2,10 +2,14 @@ reps = [i for i in range(10)]
 
 rule all:
     input:
-        expand("output/ts-{r}.trees", r=reps),
+        # expand("output/ts-{r}.trees", r=reps),
         expand("tmp/base-{r}.txt", r=reps),
+        expand("tmp/base_nb-{r}.txt", r=reps),
         expand("tmp/sq-{r}.txt", r=reps),
-        expand("tmp/la-{r}.txt", r=reps)
+        expand("tmp/sq_nm-{r}.txt", r=reps),
+        expand("tmp/la-{r}.txt", r=reps),
+        expand("tmp/lr-{r}.txt", r=reps),
+        "output/mean-times.txt"
 
 rule simulate:
     output:
@@ -47,6 +51,20 @@ rule baseline:
     shell:
         "python la-time-baseline.py --rep {wildcards.r}"
 
+rule baseline_numba:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        # "output/times-baseline.txt",
+        "tmp/base_nb-{r}.txt"
+    resources:
+        mem_mb=128000,
+        runtime=60,
+        job_name="ooa-bs-nb",
+        output="tmp/bs-nb-{r}.log"
+    shell:
+        "python la-time-baseline-numba.py --rep {wildcards.r}"
+
 rule squash:
     input:
         "output/ts-{r}.trees"
@@ -60,3 +78,42 @@ rule squash:
         output="tmp/sq-{r}.log"
     shell:
         "python la-time-squash.py --rep {wildcards.r}"
+
+rule squash_numba:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        # "output/times-squash-numba.txt",
+        "tmp/sq_nm-{r}.txt"
+    resources:
+        mem_mb=8000,
+        runtime=900,
+        job_name="ooa-sq",
+        output="tmp/sq_nm-{r}.log"
+    shell:
+        "python la-time-squash-numba.py --rep {wildcards.r}"
+
+rule stats:
+    input:
+        [f"tmp/sq-{r}.txt" for r in reps],
+        [f"tmp/sq_nm-{r}.txt" for r in reps],
+        [f"tmp/base-{r}.txt" for r in reps],
+        [f"tmp/base_nb-{r}.txt" for r in reps],
+        [f"tmp/la-{r}.txt" for r in reps]
+    output:
+        "output/mean-times.txt"
+    shell:
+        "python calculate-means.py"
+
+rule linkanc_recent:
+    input:
+        "output/ts-{r}.trees"
+    output:
+        "tmp/lr-{r}.txt"
+    resources:
+        mem_mb=4000,
+        runtime=10,
+        job_name="ooa-la-rec",
+        output="tmp/lr-{r}.log"
+    shell:
+        "python la-time-linkancestors-recentadm.py --rep {wildcards.r}"
