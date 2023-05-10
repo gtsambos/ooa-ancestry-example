@@ -5,7 +5,7 @@ import argparse
 import time
 
 # Constants
-census_time = 2093.5
+census_time = 100
 outfile = "output/times-squash.txt"
 
 # Import the correct input

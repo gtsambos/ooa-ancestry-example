@@ -3,9 +3,10 @@
 import tskit
 import argparse
 import time
+import os
 
 # Constants
-census_time = 2093.5
+census_time = 100 
 outfile = "output/times-baseline.txt"
 
 # Import the correct input
@@ -38,6 +39,10 @@ time_end = time.time()
 
 with open(outfile, "a") as f:
     print(time_end - time_start, file=f)
+
+# make the tmp directory if it doesn't exist
+if not os.path.exists("tmp"):
+    os.makedirs("tmp")
 
 with open(f"tmp/base-{rep}.txt", "w") as f:
     print(time_end - time_start, file=f)

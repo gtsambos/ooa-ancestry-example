@@ -8,7 +8,7 @@ rule all:
         expand("tmp/sq-{r}.txt", r=reps),
         expand("tmp/sq_nm-{r}.txt", r=reps),
         expand("tmp/la-{r}.txt", r=reps),
-        expand("tmp/lr-{r}.txt", r=reps),
+        # expand("tmp/lr-{r}.txt", r=reps),
         "output/mean-times.txt"
 
 rule simulate:

@@ -6,7 +6,7 @@ import time
 import numba
 
 # Constants
-census_time = 2093.5
+census_time = 100 
 outfile = "output/times-squash-numba.txt"
 
 # Import the correct input

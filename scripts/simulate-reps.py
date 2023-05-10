@@ -5,6 +5,7 @@ import stdpopsim, msprime
 import tskit
 import time
 import argparse
+import os
 
 # Import the replicate number
 parser = argparse.ArgumentParser()
@@ -14,20 +15,21 @@ parser.add_argument(
 args = parser.parse_args()
 rep = args.rep[0]
 
-# Name of output file:
+# Make the output directory if it doesn't exist.
+if not os.path.exists("output"):
+    os.makedirs("output")
 outfile = "output/times-sim.txt"
 
-# Import the OOA_archaic model from stdpopsim and convert to demes format.
+# Import the American admixture model from stdpopsim and convert to demes format.
 species = stdpopsim.get_species("HomSap")
-model = species.get_demographic_model('OutOfAfricaArchaicAdmixture_5R19')
+model = species.get_demographic_model('AmericanAdmixture_4B11')
 graph = model.model.to_demes()
-census_times = [50, 2093.5]
-num_inds = 100
+census_times = [100]
+num_inds = 1000
 
 # Convert to msprime format and add a census time just before OOA
 msp_dem = msprime.Demography.from_demes(graph)
 msp_dem.add_census(time=census_times[0])
-msp_dem.add_census(time=census_times[1])
 msp_dem.sort_events()
 
 # Simulate with msprime.
@@ -35,10 +37,10 @@ print("Simulating with msprime...")
 
 time_start = time.time()
 ts = msprime.sim_ancestry(
-    samples={"YRI": num_inds, "CEU": num_inds, "CHB" : num_inds},
+    samples={"ADMIX": num_inds},
     demography=msp_dem,
     random_seed=1016,
-    sequence_length=248956422, # stdpopsim default for chr22
+    sequence_length=248956422, # stdpopsim default for chr1
     recombination_rate=1.15235e-08 # stdpopsim default for chr1
 )
 time_end = time.time()
