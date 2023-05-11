@@ -73,7 +73,7 @@ rule squash:
         "tmp/sq-{r}.txt"
     resources:
         mem_mb=8000,
-        runtime=900,
+        runtime=1440,
         job_name="ooa-sq",
         output="tmp/sq-{r}.log"
     shell:
@@ -87,7 +87,7 @@ rule squash_numba:
         "tmp/sq_nm-{r}.txt"
     resources:
         mem_mb=8000,
-        runtime=900,
+        runtime=1440,
         job_name="ooa-sq",
         output="tmp/sq_nm-{r}.log"
     shell:
@@ -97,8 +97,8 @@ rule stats:
     input:
         [f"tmp/sq-{r}.txt" for r in reps],
         [f"tmp/sq_nm-{r}.txt" for r in reps],
-        [f"tmp/base-{r}.txt" for r in reps],
-        [f"tmp/base_nb-{r}.txt" for r in reps],
+        # [f"tmp/base-{r}.txt" for r in reps],
+        # [f"tmp/base_nb-{r}.txt" for r in reps],
         [f"tmp/la-{r}.txt" for r in reps]
     output:
         "output/mean-times.txt"

@@ -4,8 +4,8 @@ import numpy as np
 
 # Read in files.
 for infile in [
-    "output/times-baseline.txt",
-    "output/times-baseline-numba.txt",
+    # "output/times-baseline.txt",
+    # "output/times-baseline-numba.txt",
     "output/times-squash.txt",
     "output/times-squash-numba.txt",
     "output/times-linkancestors.txt"
